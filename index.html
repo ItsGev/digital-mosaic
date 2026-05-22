@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Digital Mosaic Collective — A Santa Monica College community storytelling platform for sharing stories, art, sounds, and memories." />
+  <title>The Digital Mosaic Collective — Santa Monica College</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ═══ SMC BAR ═══ -->
+  <header class="smc-bar">
+    <img class="smc-logo" src="assets/smc-logo.png" alt="Santa Monica College" />
+    <div class="smc-divider"></div>
+    <div class="smc-label">
+      <strong>Digital Mosaic Collective</strong>
+      A community storytelling platform
+    </div>
+    <button class="admin-bar-btn" onclick="openAdminGate()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Admin
+    </button>
+  </header>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="mosaic-bg" aria-hidden="true"></div>
+    <span class="hero-eyebrow">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="6" height="6" rx="1"/><rect x="10" y="0" width="6" height="6" rx="1"/><rect x="0" y="10" width="6" height="6" rx="1"/><rect x="10" y="10" width="6" height="6" rx="1"/></svg>
+      Community Archive
+    </span>
+    <h1>The <em>Digital Mosaic</em> Collective</h1>
+    <p>Share your story, your art, your sound. Each tile you add becomes part of something larger — a living mosaic of our community's voices.</p>
+    <button class="btn-add" onclick="openModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      Add Your Tile
+    </button>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="stat-live">8</div><div class="stat-label">Tiles</div></div>
+      <div class="hero-rule" aria-hidden="true"></div>
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">Themes</div></div>
+      <div class="hero-rule" aria-hidden="true"></div>
+      <div class="stat"><div class="stat-num" id="stat-pending">0</div><div class="stat-label">Pending</div></div>
+    </div>
+  </section>
+
+  <!-- ═══ FILTERS ═══ -->
+  <nav class="filter-wrap" aria-label="Filter by theme">
+    <span class="filter-label">Themes</span>
+    <div class="divider-v" aria-hidden="true"></div>
+    <div class="filters" role="group">
+      <button class="fpill active" onclick="filter(this,'all')">All Tiles</button>
+      <button class="fpill" onclick="filter(this,'Loss & Grief')"><span class="fpill-dot" style="background:var(--navy)" aria-hidden="true"></span>Loss &amp; Grief <span class="count">4</span></button>
+      <button class="fpill" onclick="filter(this,'Hope & Renewal')"><span class="fpill-dot" style="background:var(--sky)" aria-hidden="true"></span>Hope &amp; Renewal <span class="count">5</span></button>
+      <button class="fpill" onclick="filter(this,'Community')"><span class="fpill-dot" style="background:var(--gold)" aria-hidden="true"></span>Community <span class="count">4</span></button>
+      <button class="fpill" onclick="filter(this,'Nature')"><span class="fpill-dot" style="background:#3aaf6b" aria-hidden="true"></span>Nature <span class="count">3</span></button>
+      <button class="fpill" onclick="filter(this,'Family')"><span class="fpill-dot" style="background:#e0731a" aria-hidden="true"></span>Family <span class="count">3</span></button>
+      <button class="fpill" onclick="filter(this,'Rebuilding')"><span class="fpill-dot" style="background:var(--gray)" aria-hidden="true"></span>Rebuilding <span class="count">2</span></button>
+      <button class="fpill" onclick="filter(this,'Art & Expression')"><span class="fpill-dot" style="background:#8a56cc" aria-hidden="true"></span>Art &amp; Expression <span class="count">3</span></button>
+      <button class="fpill" onclick="filter(this,'Resilience')"><span class="fpill-dot" style="background:#d4a017" aria-hidden="true"></span>Resilience <span class="count">1</span></button>
+    </div>
+  </nav>
+
+  <!-- ═══ TILE GRID ═══ -->
+  <main class="grid-outer">
+    <div class="grid-cols" id="grid">
+
+      <article class="tile" data-id="seed-1" data-tags="Loss & Grief,Hope & Renewal,Nature,Rebuilding">
+        <button class="admin-delete" onclick="deleteLiveTile(this)" title="Delete tile" aria-label="Delete tile">✕</button>
+        <div class="tile-accent navy"></div>
+        <img class="tile-photo" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80" alt="Mountain road at sunset with dramatic sky" loading="lazy" />
+        <div class="tile-body">
+          <div class="tile-meta"><span class="tile-type img-type">Image tile</span><span class="tile-date">Oct 12, 2025</span></div>
+          <h3>The Morning After</h3>
+          <p class="tile-desc">The smoke finally cleared enough to see the ridge. It looks different now, but the sun still rises. We will rebuild.</p>
+          <div class="tile-author"><div class="avatar navy" aria-hidden="true">S</div><span class="author-name">Sarah Jenkins</span></div>
+          <div class="tile-tags"><span class="ttag c1">Loss &amp; Grief</span><span class="ttag c2">Hope &amp; Renewal</span><span class="ttag c4">Nature</span><span class="ttag c4">Rebuilding</span></div>
+        </div>
+      </article>
+
+      <article class="tile" data-id="seed-2" data-tags="Loss & Grief,Family,Art & Expression" style="background:#f4f7fb">
+        <button class="admin-delete" onclick="deleteLiveTile(this)" title="Delete tile" aria-label="Delete tile">✕</button>
+        <div class="tile-accent sky"></div>
+        <div class="tile-body">
+          <div class="tile-meta"><span class="tile-type txt-type">Text tile</span><span class="tile-date">Oct 14, 2025</span></div>
+          <h3>What We Carried</h3>
+          <p class="tile-desc">When the evacuation order came, we had 10 minutes. I grabbed the dog, the hard drive with our photos, and strangely, a ceramic bowl my daughter made in 3rd grade. The house is gone, but we are safe. That bowl sits on the counter of our rental now, a reminder of what matters.</p>
+          <div class="tile-author"><div class="avatar sky" aria-hidden="true">A</div><span class="author-name">Anonymous</span></div>
+          <div class="tile-tags"><span class="ttag c1">Loss &amp; Grief</span><span class="ttag c1">Family</span><span class="ttag c2">Art &amp; Expression</span></div>
+        </div>
+      </article>
+
+      <article class="tile" data-id="seed-3" data-tags="Community">
+        <button class="admin-delete" onclick="deleteLiveTile(this)" title="Delete tile" aria-label="Delete tile">✕</button>
+        <div class="tile-accent gold"></div>
+        <img class="tile-photo" src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80" alt="Volunteers serving food at community kitchen" loading="lazy" />
+        <div class="tile-body">
+          <div class="tile-meta"><span class="tile-type img-type">Image tile</span><span class="tile-date">Oct 16, 2025</span></div>
+          <h3>Community Kitchen</h3>
+          <p class="tile-desc">Volunteers serving hot meals at the high school gym. The line was long, but the hugs were longer.</p>
+          <div class="tile-author"><div class="avatar gold" style="color:#333" aria-hidden="true">M</div><span class="author-name">Marcus T.</span></div>
+          <div class="tile-tags"><span class="ttag c3">Community</span></div>
+        </div>
+      </article>
+
+      <article class="tile" data-id="seed-4" data-tags="Hope & Renewal,Community,Rebuilding">
+        <button class="admin-delete" onclick="deleteLiveTile(this)" title="Delete tile" aria-label="Delete tile">✕</button>
+        <div class="tile-accent navy"></div>
+        <div class="audio-player">
+          <div class="ap-controls">
+            <button class="ap-play" onclick="togglePlay(this)" aria-label="Play audio">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#1a1c22"><polygon points="5,3 19,12 5,21"/></svg>
+            </button>
+            <div class="waveform" aria-hidden="true">
+              <span style="--d:.5s;--s:2;height:8px"></span><span style="--d:.7s;--s:4;height:14px"></span>
+              <span style="--d:.4s;--s:3;height:10px"></span><span style="--d:.9s;--s:5;height:20px"></span>
+              <span style="--d:.6s;--s:2;height:8px"></span><span style="--d:.5s;--s:6;height:24px"></span>
+              <span style="--d:.8s;--s:4;height:16px"></span><span style="--d:.6s;--s:3;height:12px"></span>
+              <span style="--d:.7s;--s:5;height:20px"></span><span style="--d:.4s;--s:2;height:8px"></span>
+              <span style="--d:.9s;--s:4;height:16px"></span><span style="--d:.5s;--s:6;height:24px"></span>
+              <span style="--d:.6s;--s:3;height:10px"></span><span style="--d:.8s;--s:5;height:20px"></span>
+              <span style="--d:.7s;--s:2;height:8px"></span><span style="--d:.5s;--s:4;height:14px"></span>
+              <span style="--d:.4s;--s:3;height:12px"></span><span style="--d:.9s;--s:2;height:8px"></span>
+              <span style="--d:.6s;--s:5;height:20px"></span><span style="--d:.8s;--s:3;height:12px"></span>
+            </div>
+            <span class="ap-time">1:42</span>
+          </div>
+        </div>
+        <div class="tile-body">
+          <div class="tile-meta"><span class="tile-type aud-type">Sound tile</span><span class="tile-date">Nov 2, 2025</span></div>
+          <h3>Sounds of Rebuilding</h3>
+          <p class="tile-desc">Recorded this morning on Elm Street. Hammers, saws, and neighbors talking over fences again. The sound of hope.</p>
+          <div class="tile-author"><div class="avatar navy" aria-hidden="true">D</div><span class="author-name">David Chen</span></div>
+          <div class="tile-tags"><span class="ttag c2">Hope &amp; Renewal</span><span class="ttag c3">Community</span><span class="ttag c4">Rebuilding</span></div>
+        </div>
+      </article>
+
+      <article class="tile" data-id="seed-5" data-tags="Hope & Renewal,Community,Family,Art & Expression">
+        <button class="admin-delete" onclick="deleteLiveTile(this)" title="Delete tile" aria-label="Delete tile">✕</button>
+        <div class="tile-accent sky"></div>
+        <img class="tile-photo" src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&q=80" alt="Chalk art on pavement" loading="lazy" />
+        <div class="tile-body">
+          <div class="tile-meta"><span class="tile-type img-type">Image tile</span><span class="tile-date">Nov 5, 2025</span></div>
+          <h3>Hope in Chalk</h3>
+          <p class="tile-desc">Found this drawn on the remaining driveway of our neighbor's house. Kids always know how to find the light.</p>
+          <div class="tile-author"><div class="avatar gold" style="color:#333" aria-hidden="true">T</div><span class="author-name">The Miller Family</span></div>
+          <div class="tile-tags"><span class="ttag c2">Hope &amp; Renewal</span><span class="ttag c3">Community</span><span class="ttag c1">Family</span><span class="ttag c2">Art &amp; Expression</span></div>
+        </div>
+      </article>
+
+      <article class="tile" data-id="seed-6" data-tags="Loss & Grief,Hope & Renewal,Nature,Art & Expression" style="background:#f4f7fb">
+        <button class="admin-delete" onclick="deleteLiveTile(this)" title="Delete tile" aria-label="Delete tile">✕</button>
+        <div class="tile-accent navy"></div>
+        <div class="tile-body">
+          <div class="tile-meta"><span class="tile-type txt-type">Text tile</span><span class="tile-date">Nov 10, 2025</span></div>
+          <h3>A Poem for the Pines</h3>
+          <div class="tile-poem">Blackened bark stands tall,<br>Roots still deep beneath the ash,<br>Green shoots will return.<br><br>We are the forest,<br>Scorched but never uprooted,<br>Waiting for the rain.</div>
+          <div class="tile-author"><div class="avatar sky" aria-hidden="true">E</div><span class="author-name">Elena R.</span></div>
+          <div class="tile-tags"><span class="ttag c1">Loss &amp; Grief</span><span class="ttag c2">Hope &amp; Renewal</span><span class="ttag c4">Nature</span><span class="ttag c2">Art &amp; Expression</span></div>
+        </div>
+      </article>
+
+      <article class="tile" data-id="seed-7" data-tags="Community,Resilience">
+        <button class="admin-delete" onclick="deleteLiveTile(this)" title="Delete tile" aria-label="Delete tile">✕</button>
+        <div class="tile-accent gray"></div>
+        <div class="video-thumb">
+          <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" alt="Community town hall gathering" loading="lazy" />
+          <div class="play-overlay" aria-hidden="true">
+            <div class="play-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1a1c22"><polygon points="5,3 19,12 5,21"/></svg></div>
+          </div>
+        </div>
+        <div class="tile-body">
+          <div class="tile-meta"><span class="tile-type vid-type">Video tile</span><span class="tile-date">Nov 13, 2025</span></div>
+          <h3>First Town Hall</h3>
+          <p class="tile-desc">Over 500 people showed up to discuss rebuilding efforts. The spirit in that room was unbreakable.</p>
+          <div class="tile-author"><div class="avatar gray" aria-hidden="true">P</div><span class="author-name">Palisades News</span></div>
+          <div class="tile-tags"><span class="ttag c3">Community</span><span class="ttag c4">Resilience</span></div>
+        </div>
+      </article>
+
+      <article class="tile" data-id="seed-8" data-tags="Loss & Grief,Hope & Renewal,Nature">
+        <button class="admin-delete" onclick="deleteLiveTile(this)" title="Delete tile" aria-label="Delete tile">✕</button>
+        <div class="tile-accent gold"></div>
+        <img class="tile-photo" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80" alt="Green plant shoots growing from soil" loading="lazy" />
+        <div class="tile-body">
+          <div class="tile-meta"><span class="tile-type img-type">Image tile</span><span class="tile-date">Nov 20, 2025</span></div>
+          <h3>New Growth</h3>
+          <p class="tile-desc">Found the first green sprout pushing through the ash in my backyard today. Nature heals, and so will we.</p>
+          <div class="tile-author"><div class="avatar navy" aria-hidden="true">A</div><span class="author-name">Anonymous</span></div>
+          <div class="tile-tags"><span class="ttag c1">Loss &amp; Grief</span><span class="ttag c2">Hope &amp; Renewal</span><span class="ttag c4">Nature</span></div>
+        </div>
+      </article>
+
+    </div><!-- /#grid -->
+  </main>
+
+  <!-- ═══ FLOATING ACTION BUTTON ═══ -->
+  <button class="fab" onclick="openModal()" aria-label="Add your tile">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    Add Your Tile
+  </button>
+
+  <!-- ═══ PASSWORD GATE ═══ -->
+  <div class="pw-gate" id="pw-gate" role="dialog" aria-modal="true" aria-label="Admin login">
+    <div class="pw-box">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <h3>Admin Access</h3>
+      <p>Enter your admin password to manage submissions and live tiles.</p>
+      <input class="pw-input" id="pw-input" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkPassword()" />
+      <div class="pw-err" id="pw-err" role="alert">Incorrect password. Try again.</div>
+      <button class="pw-submit" onclick="checkPassword()">Enter Admin Panel</button>
+    </div>
+  </div>
+
+  <!-- ═══ ADMIN PANEL ═══ -->
+  <div class="admin-overlay" id="admin-overlay" role="dialog" aria-modal="true" aria-label="Admin panel">
+    <div class="admin-header">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <h2>Admin Panel</h2>
+      <span class="admin-badge">MODERATOR</span>
+      <button class="admin-exit" onclick="exitAdmin()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        Exit Admin
+      </button>
+    </div>
+    <div class="admin-body">
+      <div class="admin-section-head">
+        Pending Review
+        <span class="badge-count gold" id="pending-count">0</span>
+      </div>
+      <div id="pending-list"></div>
+
+      <div class="admin-section-head" style="margin-top:32px">
+        Live Tiles
+        <span class="badge-count" id="live-count">0</span>
+      </div>
+      <div id="live-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SUBMIT MODAL ═══ -->
+  <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-label="Submit a tile" onclick="bgClick(event)">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="modal-title">Add Your Tile</h2>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+      </div>
+      <div class="modal-scroll" id="modal-scroll">
+
+        <!-- Step indicator -->
+        <div class="steps" id="steps" aria-label="Progress">
+          <div class="step active" id="s1"><div class="step-num">1</div> Your tile</div>
+          <div class="step-line"></div>
+          <div class="step" id="s2"><div class="step-num">2</div> Media</div>
+          <div class="step-line"></div>
+          <div class="step" id="s3"><div class="step-num">3</div> Details</div>
+        </div>
+
+        <!-- Step 1: Type + Title -->
+        <div id="step1">
+          <div class="form-group">
+            <label class="form-label">What kind of tile is this?</label>
+            <div class="type-grid">
+              <div class="type-opt selected" onclick="selectType(this,'text')" role="radio" aria-checked="true" tabindex="0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Text / Poem</span>
+              </div>
+              <div class="type-opt" onclick="selectType(this,'image')" role="radio" aria-checked="false" tabindex="0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Image / Photo</span>
+              </div>
+              <div class="type-opt" onclick="selectType(this,'audio')" role="radio" aria-checked="false" tabindex="0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 18V5l12-2v13M9 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm12-2c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z"/></svg><span>Sound</span>
+              </div>
+              <div class="type-opt" onclick="selectType(this,'video')" role="radio" aria-checked="false" tabindex="0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg><span>Video</span>
+              </div>
+              <div class="type-opt" onclick="selectType(this,'artwork')" role="radio" aria-checked="false" tabindex="0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M8 12s1-2 4-2 4 2 4 2"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/></svg><span>Artwork</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-title">Title <span class="char-count" id="title-count">0 / 80</span></label>
+            <input class="form-input" id="f-title" type="text" maxlength="80" placeholder="Give your tile a title…" oninput="countChars(this,'title-count',80)" />
+            <div class="error-msg" id="err-title" role="alert">Please add a title.</div>
+          </div>
+          <div class="form-footer">
+            <button class="btn-back" onclick="closeModal()">Cancel</button>
+            <button class="btn-next" onclick="goStep(2)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Step 2: Media upload -->
+        <div id="step2" style="display:none">
+          <div class="form-group" id="upload-group">
+            <label class="form-label">Upload your media</label>
+            <div class="upload-zone" id="drop-zone">
+              <input type="file" id="file-input" accept="image/*,audio/*,video/*" onchange="handleFile(this.files[0])" aria-label="Upload file" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <p><strong>Click to upload</strong> or drag &amp; drop</p>
+              <p class="accepted" id="accepted-types">Images, audio, or video — up to 100 MB</p>
+            </div>
+            <div class="file-preview" id="file-preview">
+              <div class="preview-thumb" id="preview-thumb"></div>
+              <div class="preview-info">
+                <div class="preview-name" id="preview-name"></div>
+                <div class="preview-size" id="preview-size"></div>
+              </div>
+              <button class="preview-remove" onclick="removeFile()" aria-label="Remove file">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-footer">
+            <button class="btn-back" onclick="goStep(1)">← Back</button>
+            <button class="btn-next" onclick="goStep(3)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Step 3: Story + Tags + Name -->
+        <div id="step3" style="display:none">
+          <div class="form-group">
+            <label class="form-label" for="f-story">Your story <span class="char-count" id="story-count">0 / 600</span></label>
+            <textarea class="form-textarea" id="f-story" maxlength="600" placeholder="Share what this means to you…" oninput="countChars(this,'story-count',600)"></textarea>
+            <div class="error-msg" id="err-story" role="alert">Please share a little about your tile.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Themes <span class="form-sublabel">(choose up to 4)</span></label>
+            <div class="tag-select" id="tag-select" role="group" aria-label="Select themes">
+              <button class="tsel" onclick="toggleTag(this)">Loss &amp; Grief</button>
+              <button class="tsel" onclick="toggleTag(this)">Hope &amp; Renewal</button>
+              <button class="tsel" onclick="toggleTag(this)">Community</button>
+              <button class="tsel" onclick="toggleTag(this)">Nature</button>
+              <button class="tsel" onclick="toggleTag(this)">Family</button>
+              <button class="tsel" onclick="toggleTag(this)">Rebuilding</button>
+              <button class="tsel" onclick="toggleTag(this)">Art &amp; Expression</button>
+              <button class="tsel" onclick="toggleTag(this)">Resilience</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-name">Your name</label>
+            <input class="form-input" id="f-name" type="text" placeholder="Leave blank to post anonymously" autocomplete="name" />
+            <p class="form-hint">We'll never share your full name publicly without permission.</p>
+          </div>
+          <div class="form-footer">
+            <button class="btn-back" onclick="goStep(2)">← Back</button>
+            <button class="btn-submit-final" id="submit-btn" onclick="submitTile()">
+              <span class="btn-label">Submit Tile ✦</span>
+              <div class="spinner" aria-hidden="true"></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Success screen -->
+        <div class="success-screen" id="success-screen" aria-live="polite">
+          <div class="success-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <h3>Your tile is submitted!</h3>
+          <p>Thank you for contributing to The Digital Mosaic Collective. Our team will review your tile and post it to the board shortly.</p>
+          <div class="success-meta" id="success-meta"></div>
+          <button class="btn-close-success" onclick="closeModal()">Back to the Mosaic</button>
+        </div>
+
+      </div><!-- /.modal-scroll -->
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Scripts — config first, then app logic -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+
+</body>
+</html>
