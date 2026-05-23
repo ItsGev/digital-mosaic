@@ -44,7 +44,7 @@
     <p>Share your story, your art, your sound. Each tile you add becomes part of something larger — a living mosaic of our community's voices.</p>
     <button class="btn-add" onclick="openModal()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      Add Your Tile
+      Add a Tile
     </button>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num" id="stat-live">8</div><div class="stat-label">Tiles</div></div>
@@ -208,18 +208,20 @@
   <!-- ═══ FLOATING ACTION BUTTON ═══ -->
   <button class="fab" onclick="openModal()" aria-label="Add your tile">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-    Add Your Tile
+    Add a Tile
   </button>
 
   <!-- ═══ PASSWORD GATE ═══ -->
-  <div class="pw-gate" id="pw-gate" role="dialog" aria-modal="true" aria-label="Admin login">
+  <div class="pw-gate" id="pw-gate" role="dialog" aria-modal="true" aria-label="Admin login" onclick="closePwGate(event)">
     <div class="pw-box">
+      <button class="pw-close" onclick="document.getElementById('pw-gate').classList.remove('open')" aria-label="Close">✕</button>
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
       <h3>Admin Access</h3>
       <p>Enter your admin password to manage submissions and live tiles.</p>
       <input class="pw-input" id="pw-input" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkPassword()" />
       <div class="pw-err" id="pw-err" role="alert">Incorrect password. Try again.</div>
       <button class="pw-submit" onclick="checkPassword()">Enter Admin Panel</button>
+      <button class="pw-cancel" onclick="document.getElementById('pw-gate').classList.remove('open')">Cancel</button>
     </div>
   </div>
 
@@ -253,7 +255,7 @@
   <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-label="Submit a tile" onclick="bgClick(event)">
     <div class="modal">
       <div class="modal-head">
-        <h2 id="modal-title">Add Your Tile</h2>
+        <h2 id="modal-title">Add a Tile</h2>
         <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
       </div>
       <div class="modal-scroll" id="modal-scroll">
@@ -265,6 +267,8 @@
           <div class="step" id="s2"><div class="step-num">2</div> Media</div>
           <div class="step-line"></div>
           <div class="step" id="s3"><div class="step-num">3</div> Details</div>
+          <div class="step-line"></div>
+          <div class="step" id="s4"><div class="step-num">4</div> Review</div>
         </div>
 
         <!-- Step 1: Type + Title -->
@@ -352,10 +356,36 @@
             <input class="form-input" id="f-name" type="text" placeholder="Leave blank to post anonymously" autocomplete="name" />
             <p class="form-hint">We'll never share your full name publicly without permission.</p>
           </div>
+          <div class="form-group">
+            <label class="form-label" for="f-link">
+              Link <span class="form-sublabel">(optional)</span>
+            </label>
+            <div class="link-input-wrap">
+              <svg class="link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+              <input class="form-input link-input" id="f-link" type="url"
+                     placeholder="https://example.com" autocomplete="url"
+                     oninput="validateLinkInput(this)" />
+            </div>
+            <div class="error-msg" id="err-link" role="alert">Please enter a valid URL (must start with https://)</div>
+            <p class="form-hint">Attach a website, article, social post, or any URL to your tile.</p>
+          </div>
           <div class="form-footer">
             <button class="btn-back" onclick="goStep(2)">← Back</button>
+            <button class="btn-next" onclick="goStep(4)">Preview <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Step 4: Preview & confirm -->
+        <div id="step4" style="display:none">
+          <p style="font-size:.8rem;color:var(--gray);margin-bottom:14px;">Here's how your tile will look on the wall. Ready to post?</p>
+          <div id="tile-preview-card" style="border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;background:#fff;"></div>
+          <div class="form-footer">
+            <button class="btn-back" onclick="goStep(3)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+              Make Changes
+            </button>
             <button class="btn-submit-final" id="submit-btn" onclick="submitTile()">
-              <span class="btn-label">Submit Tile ✦</span>
+              <span class="btn-label">Post to Wall ✦</span>
               <div class="spinner" aria-hidden="true"></div>
             </button>
           </div>
