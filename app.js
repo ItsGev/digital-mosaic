@@ -126,66 +126,66 @@ function renderPreview() {
   const previewCard = document.getElementById('tile-preview-card');
   if (!previewCard) return;
 
-  /* Safely read all fields */
-  const title      = (document.getElementById('f-title')?.value || '').trim();
-  const story      = (document.getElementById('f-story')?.value || '').trim();
-  const authorName = (document.getElementById('f-name')?.value || '').trim() || 'Anonymous';
-  const link       = (document.getElementById('f-link')?.value || '').trim();
-  const tags       = [...document.querySelectorAll('.tsel.on')].map(t => t.textContent.trim());
-  const date       = new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  try {
+    const title      = String(document.getElementById('f-title')?.value || '').trim() || 'Untitled';
+    const story      = String(document.getElementById('f-story')?.value || '').trim();
+    const authorName = String(document.getElementById('f-name')?.value  || '').trim() || 'Anonymous';
+    const link       = String(document.getElementById('f-link')?.value  || '').trim();
+    const tags       = [...document.querySelectorAll('.tsel.on')].map(t => String(t.textContent).trim());
+    const date       = new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    const accentCls  = ['navy','sky','gold','gray'][document.querySelectorAll('#grid .tile').length % 4];
+    const tagsHtml   = tags.map(t => `<span class="ttag c1">${t}</span>`).join('');
+    const initial    = authorName.charAt(0).toUpperCase();
 
-  const accentColors = ['navy','sky','gold','gray'];
-  const accentCls    = accentColors[document.querySelectorAll('#grid .tile').length % 4];
-  const tagsHtml     = tags.map(t => `<span class="ttag c1">${t}</span>`).join('');
-  const initial      = authorName.charAt(0).toUpperCase();
-
-  /* Media preview */
-  let mediaHtml = '';
-  if (selectedFile) {
-    const url = URL.createObjectURL(selectedFile);
-    if (selectedFile.type.startsWith('image/')) {
-      mediaHtml = `<img src="${url}" alt="Your upload" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">`;
-    } else if (selectedFile.type.startsWith('audio/')) {
-      mediaHtml = `
-        <div style="background:var(--navy);padding:16px 18px;display:flex;align-items:center;gap:12px;">
-          <div style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#1a1c22"><polygon points="5,3 19,12 5,21"/></svg>
-          </div>
-          <span style="font-size:.78rem;color:rgba(255,255,255,.75);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${selectedFile.name}</span>
-        </div>`;
-    } else if (selectedFile.type.startsWith('video/')) {
-      mediaHtml = `
-        <div style="position:relative;aspect-ratio:16/9;overflow:hidden;background:#000;">
-          <video src="${url}" style="width:100%;height:100%;object-fit:cover;" muted playsinline></video>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(11,78,162,.3);">
-            <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,196,37,.9);display:flex;align-items:center;justify-content:center;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#1a1c22"><polygon points="5,3 19,12 5,21"/></svg>
+    let mediaHtml = '';
+    if (selectedFile) {
+      try {
+        const url = URL.createObjectURL(selectedFile);
+        if (selectedFile.type.startsWith('image/')) {
+          mediaHtml = `<img src="${url}" alt="Upload preview" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">`;
+        } else if (selectedFile.type.startsWith('audio/')) {
+          mediaHtml = `<div style="background:var(--navy);padding:16px 18px;display:flex;align-items:center;gap:12px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#1a1c22"><polygon points="5,3 19,12 5,21"/></svg>
             </div>
-          </div>
-        </div>`;
+            <span style="font-size:.78rem;color:rgba(255,255,255,.75);">${selectedFile.name}</span>
+          </div>`;
+        } else if (selectedFile.type.startsWith('video/')) {
+          mediaHtml = `<div style="position:relative;aspect-ratio:16/9;overflow:hidden;background:#000;">
+            <video src="${url}" style="width:100%;height:100%;object-fit:cover;" muted playsinline></video>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(11,78,162,.3);">
+              <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,196,37,.9);display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#1a1c22"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>`;
+        }
+      } catch(mediaErr) { console.warn('Media preview error:', mediaErr); }
     }
+
+    previewCard.innerHTML = `
+      <div class="tile-accent ${accentCls}"></div>
+      ${mediaHtml}
+      <div class="tile-body">
+        <div class="tile-meta">
+          <span class="tile-type txt-type">${selectedType} tile</span>
+          <span class="tile-date">${date}</span>
+        </div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--navy);line-height:1.25;margin-bottom:7px;">${title}</h3>
+        <p class="tile-desc">${story}</p>
+        <div class="tile-author" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0;">${initial}</div>
+          <span style="font-size:.78rem;font-weight:500;">${authorName}</span>
+        </div>
+        ${tagsHtml ? `<div class="tile-tags" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">${tagsHtml}</div>` : ''}
+        ${buildLinkHtml(link)}
+      </div>`;
+
+  } catch(e) {
+    console.error('renderPreview failed:', e);
+    previewCard.innerHTML = `<div style="padding:20px;color:var(--gray);font-size:.88rem;">
+      Preview unavailable — your tile will still post correctly.</div>`;
   }
-
-  /* Link button */
-  const linkHtml = buildLinkHtml(link);
-
-  previewCard.innerHTML = `
-    <div class="tile-accent ${accentCls}"></div>
-    ${mediaHtml}
-    <div class="tile-body">
-      <div class="tile-meta">
-        <span class="tile-type txt-type">${selectedType} tile</span>
-        <span class="tile-date">${date}</span>
-      </div>
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--navy);line-height:1.25;margin-bottom:7px;">${title || 'Untitled'}</h3>
-      <p class="tile-desc">${story}</p>
-      <div class="tile-author" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-        <div class="avatar navy" style="width:26px;height:26px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0;">${initial}</div>
-        <span class="author-name" style="font-size:.78rem;font-weight:500;">${authorName}</span>
-      </div>
-      ${tagsHtml ? `<div class="tile-tags" style="display:flex;flex-wrap:wrap;gap:5px;">${tagsHtml}</div>` : ''}
-      ${linkHtml}
-    </div>`;
 }
 
 /* ════════════════════════════════════════════════════════════
